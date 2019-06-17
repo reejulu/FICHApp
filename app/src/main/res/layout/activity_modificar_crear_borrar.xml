@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".acitividades.ModificarCrearBorrarActivity"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="35dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            android:background="@color/colorVerde"
+            android:gravity="center"
+            android:text="ACCION" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            android:background="@color/colorVerde"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:id="@+id/txtordenarID"
+            android:text="ID" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_weight="4"
+            android:layout_height="match_parent"
+            android:background="@color/colorVerde"
+            android:gravity="center_vertical"
+            android:text="NOMBRE EMPLEADO"
+            android:id="@+id/txtmodelo1" />
+
+    </LinearLayout>
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_margin="@dimen/fab_margin"
+        app:backgroundTint="@color/colorAmarillo"
+        android:src="@drawable/ic_addempleados" />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/RecView"
+        android:visibility="visible"
+        android:layout_marginTop="35dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/txtConfirmarBorrar"
+            android:layout_width="wrap_content"
+            android:visibility="invisible"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@color/colorAmarillo"
+            android:layout_gravity="center"
+            android:textColor="@color/colorAccent"
+            android:textSize="30dp"
+            android:text="¿Confirmar borrado?" />
+
+        <TextView
+            android:id="@+id/txtEmpleadoaBorrar"
+            android:layout_width="wrap_content"
+            android:visibility="invisible"
+            android:layout_marginTop="40sp"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@color/colorAmarillo"
+            android:layout_gravity="center"
+            android:textColor="@color/colorAccent"
+            android:textSize="20dp"
+            android:text="a insertar nombre" />
+
+        <Button
+            android:id="@+id/btnsi"
+            android:visibility="invisible"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="80sp"
+            android:backgroundTint="@color/colorAmarillo"
+            android:text="SI" />
+
+        <Button
+            android:id="@+id/btnno"
+            android:visibility="invisible"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@color/colorAmarillo"
+            android:layout_gravity="center"
+            android:layout_marginTop="120sp"
+            android:text="NO" />
+
+    </FrameLayout>
+
+</android.support.design.widget.CoordinatorLayout>

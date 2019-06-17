@@ -2,6 +2,10 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="edu.cftic.fichapp">
 
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
+
     <application
         android:name=".persistencia.DB"
         android:allowBackup="true"
@@ -10,19 +14,23 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".acitividades.RegistroEmpresaActivity"></activity>
-        <activity android:name=".acitividades.RegistroEmpleadoActivity" />
-        <activity android:name=".acitividades.MenuEmpleadoActivity" />
-        <activity android:name=".acitividades.MenuGestorActivity" />
-        <activity android:name=".acitividades.AyudaActivity" />
-        <activity android:name=".acitividades.AvisosLegalesActivity" />
-        <activity android:name=".acitividades.MainActivity">
+        <activity android:name=".acitividades.EnviarMailActivity"></activity>
+        <activity android:name=".acitividades.SeleccionarInforme"></activity>
+        <activity android:name=".acitividades.EnviarMailEnviarActivity"></activity>
+        <activity android:name=".acitividades.ModificarCrearBorrarActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".acitividades.RegistroEmpresaActivity" />
+        <activity android:name=".acitividades.RegistroEmpleadoActivity" />
+        <activity android:name=".acitividades.MenuEmpleadoActivity" />
+        <activity android:name=".acitividades.MenuGestorActivity" />
+        <activity android:name=".acitividades.AyudaActivity" />
+        <activity android:name=".acitividades.AvisosLegalesActivity" />
+        <activity android:name=".acitividades.MainActivity"></activity>
     </application>
 
 </manifest>
