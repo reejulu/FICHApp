@@ -22,6 +22,7 @@ import edu.cftic.fichapp.R;
 import edu.cftic.fichapp.bean.Empleado;
 import edu.cftic.fichapp.bean.Empresa;
 import edu.cftic.fichapp.persistencia.DB;
+import edu.cftic.fichapp.servicios.GestorAlarma;
 import edu.cftic.fichapp.util.AdapterEmpleados;
 import edu.cftic.fichapp.util.Constantes;
 
@@ -171,6 +172,11 @@ public class ModificarCrearBorrarActivity extends AppCompatActivity {
 
             }
         });
+
+// PROGRAMAR TARIA DE ENVIO DE MENSAJE EL PRIMER DIA DE CADA MES
+        GestorAlarma ga = new GestorAlarma(this);
+        ga.programarAlarma();
+        //this.finish();
 
     }
 

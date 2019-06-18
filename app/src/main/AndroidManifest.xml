@@ -31,6 +31,26 @@
         <activity android:name=".acitividades.AyudaActivity" />
         <activity android:name=".acitividades.AvisosLegalesActivity" />
         <activity android:name=".acitividades.MainActivity"></activity>
+
+        <service
+            android:name=".servicios.ServicioEnvio"
+            android:enabled="true"
+            android:exported="true" />
+
+        <receiver
+            android:name=".servicios.ServicioReceiver"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="SERVICIO_TERMINADO"></action>
+            </intent-filter>
+        </receiver>
+
+        <receiver
+            android:name=".servicios.AlarmReceiver"
+            android:enabled="true"
+            android:exported="true" />
+
     </application>
 
 </manifest>
