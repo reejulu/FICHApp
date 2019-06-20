@@ -5,6 +5,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.CheckBox;
 
+import java.io.InputStream;
 import java.util.ArrayList;
 
 import edu.cftic.fichapp.R;
@@ -39,7 +40,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void lanzarActividad(Class actividad_destino) {
-        Intent i = new Intent(this, actividad_destino);
+       // Intent i = new Intent(this, actividad_destino);
+        Intent i = new Intent(this,MenuGestorActivity.class);
         startActivity(i);
         finish();
     }

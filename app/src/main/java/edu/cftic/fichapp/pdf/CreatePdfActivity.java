@@ -30,9 +30,11 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 
 import java.io.File;
+import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.EnumSet;
@@ -46,10 +48,12 @@ import java.util.concurrent.TimeUnit;
 import edu.cftic.fichapp.R;
 
 import edu.cftic.fichapp.actividades.MenuGestorActivity;
+import edu.cftic.fichapp.actividades.SeleccionarInforme;
 import edu.cftic.fichapp.bean.Empresa;
 import edu.cftic.fichapp.persistencia.DB;
 import edu.cftic.fichapp.persistencia.esquemas.IEmpleadoEsquema;
 import edu.cftic.fichapp.persistencia.esquemas.IFichajeEsquema;
+import edu.cftic.fichapp.util.Fecha;
 
 import static java.util.concurrent.TimeUnit.HOURS;
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
@@ -121,7 +125,7 @@ public class CreatePdfActivity extends AppCompatActivity implements IEmpleadoEsq
         runOnUiThread(() -> {
           progressDialog.dismiss();
           //TODO hacer el salto a la actividad del email JUANLU MUÑOZ
-          Intent intent = new Intent(this, MenuGestorActivity.class);
+          Intent intent = new Intent(this, SeleccionarInforme.class);
           File folder = new File(Environment.getExternalStorageDirectory().toString(), "PDF");
           File pdfFile = new File(folder, TemplatePdf.FILE_NAME);
           if (!pdfFile.exists()) {
@@ -177,13 +181,11 @@ public class CreatePdfActivity extends AppCompatActivity implements IEmpleadoEsq
     }
   }
 
-  @TargetApi(Build.VERSION_CODES.O)
-  @RequiresApi(api = Build.VERSION_CODES.N)
   private void createViewPdf() {
     templatePdf = new TemplatePdf(this, emp);
     templatePdf.onStartPage();
     rows = new ArrayList<>();
-    getDataToPdf();
+//    getDataToPdf();
     templatePdf.closeDocument();
     // Se creo el documento, ahora creamos la vista con los datos. (Class TemplatePdf)
     // siempre que la petición no venga del envio automático del informe.
@@ -191,9 +193,11 @@ public class CreatePdfActivity extends AppCompatActivity implements IEmpleadoEsq
       templatePdf.viewPDF();
   }
 
-  @TargetApi(Build.VERSION_CODES.O)
-  @RequiresApi(api = Build.VERSION_CODES.N)
   private void getDataToPdf() {
+    Date date = new Date();
+    Calendar calendar = Calendar.getInstance();
+    calendar.setTime(date);
+
     String month;
     Cursor c;
     Cursor cursor;
@@ -207,7 +211,7 @@ public class CreatePdfActivity extends AppCompatActivity implements IEmpleadoEsq
       }
     }
     else {
-      month = String.valueOf(LocalDate.now().getMonthValue());
+      month = String.valueOf(calendar.get(Calendar.MONTH));
       if (Integer.valueOf(month) < 10) {
         month = "0"+month;
       }
@@ -220,8 +224,8 @@ public class CreatePdfActivity extends AppCompatActivity implements IEmpleadoEsq
       do {
         FichajeEmpleado fe = new FichajeEmpleado(
           cursor.getString(cursor.getColumnIndex(E_COL_NOMBRE)),
-          new Date(cursor.getLong(cursor.getColumnIndex(F_COL_INICIO)) * 1000),
-          new Date(cursor.getLong(cursor.getColumnIndex(F_COL_FIN)) * 1000)
+          Fecha.inicio(new Timestamp(cursor.getLong(cursor.getColumnIndex(F_COL_INICIO)))),
+          Fecha.fin(new Timestamp(cursor.getLong(cursor.getColumnIndex(F_COL_FIN))))
         );
         arrayFe.add(fe);
       } while (cursor.moveToNext());

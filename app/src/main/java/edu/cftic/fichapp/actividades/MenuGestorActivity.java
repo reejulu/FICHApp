@@ -8,6 +8,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 
+import com.google.gson.Gson;
+
 import edu.cftic.fichapp.R;
 import edu.cftic.fichapp.bean.Empleado;
 import edu.cftic.fichapp.bean.Empresa;
@@ -20,16 +22,17 @@ import static edu.cftic.fichapp.util.Constantes.EMPLEADO;
 public class MenuGestorActivity extends AppCompatActivity {
 
     private Empleado u;
-
+    Empresa empresa = null;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_menu_gestor);
-        u = (Empleado) getIntent().getExtras().get(Constantes.EMPLEADO);
+
+        //    u = (Empleado) getIntent().getExtras().get(Constantes.EMPLEADO);
 
         // recoger la empresa y setear el logo en el boton de empresa
         ImageView logo = findViewById(R.id.logo_empresa);
-        Empresa empresa = null;
+
         empresa = DB.empresas.ultimo();
         if (empresa != null){
             String rutalogo = empresa.getRutalogo();
@@ -77,14 +80,15 @@ public class MenuGestorActivity extends AppCompatActivity {
 
     public void plantilla(View view) {
         Intent intent = new Intent(this, CreatePdfActivity.class);
-        intent.putExtra("empresa",u.getEmpresa());
+        intent.putExtra("empresa",  new Gson().toJson(empresa));
         startActivity(intent);
     }
 
     public void email(View view) {
         //TODO saltarc a mandar email
         Intent intent = new Intent(this, CreatePdfActivity.class);
-        intent.putExtra("empresa",u.getEmpresa());
+        empresa = DB.empresas.ultimo();
+        intent.putExtra("empresa",  new Gson().toJson(empresa));
         startActivity(intent);
     }
 

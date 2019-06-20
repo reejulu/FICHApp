@@ -255,10 +255,10 @@ public class RegistroEmpleadoActivity extends AppCompatActivity {
         String cadena = empleado.getNombre();
         String[]array = cadena.split("_");
         String soloNombre = array[0];
-        String soloApellidos = array[1];
+        //String soloApellidos = array[1];
 
         cajanombre.setText(soloNombre);
-        cajaapellidos.setText(soloApellidos);
+        //cajaapellidos.setText(soloApellidos);
         cajausername.setText(empleado.getUsuario());
         cajacontraseña.setText(empleado.getClave());
         cajarepcontraseña = cajacontraseña;

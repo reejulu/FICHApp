@@ -22,6 +22,7 @@ import edu.cftic.fichapp.R;
 import edu.cftic.fichapp.bean.Empleado;
 import edu.cftic.fichapp.bean.Empresa;
 import edu.cftic.fichapp.persistencia.DB;
+import edu.cftic.fichapp.servicios.GestorAlarma;
 import edu.cftic.fichapp.util.AdapterEmpleados;
 import edu.cftic.fichapp.util.Constantes;
 
@@ -57,7 +58,11 @@ public class ModificarCrearBorrarActivity extends AppCompatActivity {
         // Instanciamos la BB.DD.
         bdd = new DB();
 
+        // envio peticion de e-mail periodico -para pruebas
         cargarDatosPrueba();
+        GestorAlarma ga = new GestorAlarma(this);
+        ga.programarAlarma();
+        // fin de pruebas
 
         datos = (ArrayList<Empleado>) DB.empleados.getEmpleados();
 
