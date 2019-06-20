@@ -91,8 +91,6 @@ public class EnviarMailActivity extends AppCompatActivity {
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //opcion sin plantilla
-        //setContentView(R.layout.activity_main);
 
         //->https://www.c-sharpcorner.com/article/java-mail-api-using-gmail-oauth-api-in-android/
 
@@ -114,40 +112,7 @@ public class EnviarMailActivity extends AppCompatActivity {
         email = getIntent().getStringExtra("email");
 
         init();
-        /*
-        findViewById(R.id.attachment).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (Utils.checkPermission(getApplicationContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-                    Intent photoPickerIntent = new Intent(Intent.ACTION_PICK);
-                    photoPickerIntent.setType("image/*");
-                    startActivityForResult(photoPickerIntent, SELECT_PHOTO);
-                } else {
-                    ActivityCompat.requestPermissions(EnviarMailActivity.this,
-                            new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, SELECT_PHOTO);
-                }
-            }
-        });
 
-        findViewById(R.id.changeAccount).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (Utils.checkPermission(getApplicationContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-                    startActivityForResult(mCredential.newChooseAccountIntent(), Utils.REQUEST_ACCOUNT_PICKER);
-                } else {
-                    ActivityCompat.requestPermissions(EnviarMailActivity.this,
-                            new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, SELECT_PHOTO);
-                }
-            }
-        });
-
-        sendFabButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                getResultsFromApi(view);
-            }
-        });
-*/
     }
 
     private void init() {
@@ -159,30 +124,11 @@ public class EnviarMailActivity extends AppCompatActivity {
                 getApplicationContext(), Arrays.asList(SCOPES))
                 .setBackOff(new ExponentialBackOff());
 
-        // Initializing Progress Dialog
-        //    mProgress = new ProgressDialog(this);
-        //    mProgress.setMessage("Sending...");
-        // Definition of different views
-/*
-        sendFabButton = (FloatingActionButton) findViewById(R.id.fab);
-        edtToAddress = (EditText) findViewById(R.id.to_address);
-        edtSubject = (EditText) findViewById(R.id.subject);
-        edtMessage = (EditText) findViewById(R.id.body);
-        edtAttachmentData = (EditText) findViewById(R.id.attachmentData);
-*/
-        // Fill in different fields for our e-mail
-        //   edtToAddress.setText("To write e-mail address destination");
-
         //DATOS PARA ENVIAR EL INFORME
 
-        //opcion sin plantilla
         emaildestion = email;
         emailtitulo = "Informe";
         emailmensaje = "Adjunto se envia el fichero .pdf con el reporte mensual";
-        //edtToAddress.setText(email);
-        //edtSubject.setText("Informe");
-        //edtMessage.setText("Adjunto se envia el fichero .pdf con el reporte semanal");
-
 
         // request to attacth the report pdf file to the e-mail
         Intent intent = new Intent(this, EnviarMailEnviarActivity.class);
@@ -194,28 +140,6 @@ public class EnviarMailActivity extends AppCompatActivity {
     private void showMessage(View view, String message) {
         Snackbar.make(view, message, Snackbar.LENGTH_LONG).show();
     }
-
-    private void getResultsFromApi(View view) {
-        Log.i("MIAPP", "Lista de mCredential es : " + mCredential.getAllAccounts().toString());
-        if (!isGooglePlayServicesAvailable()) {
-            acquireGooglePlayServices();
-        } else if (mCredential.getSelectedAccountName() == null) {
-            chooseAccount(view);
-        } else if (!internetDetector.checkMobileInternetConn()) {
-            showMessage(view, "No network connection available.");
-            Log.i("MIAPP", "get result api es :" + "sin Red");
-        } else if (!Utils.isNotEmpty(edtToAddress)) {
-            showMessage(view, "To address Required");
-        } else if (!Utils.isNotEmpty(edtSubject)) {
-            showMessage(view, "Subject Required");
-        } else if (!Utils.isNotEmpty(edtMessage)) {
-            showMessage(view, "Message Required");
-        } else {
-            new MakeRequestTask(this, mCredential).execute();
-        }
-
-    }
-
     private void getResultsFromApisinTemplate() {
         Log.i("MIAPP", "Lista de mCredential es : " + mCredential.getAllAccounts().toString());
         if (!isGooglePlayServicesAvailable()) {
@@ -264,23 +188,6 @@ public class EnviarMailActivity extends AppCompatActivity {
     }
 
     // Storing Mail ID using Shared Preferences
-    private void chooseAccount(View view) {
-
-        if (Utils.checkPermission(getApplicationContext(), Manifest.permission.GET_ACCOUNTS)) {
-            String accountName = getPreferences(Context.MODE_PRIVATE).getString(PREF_ACCOUNT_NAME, null);
-            if (accountName != null) {
-                mCredential.setSelectedAccountName(accountName);
-                getResultsFromApi(view);
-            } else {
-                // Start a dialog from which the user can choose an account
-                startActivityForResult(mCredential.newChooseAccountIntent(), Utils.REQUEST_ACCOUNT_PICKER);
-            }
-        } else {
-            ActivityCompat.requestPermissions(EnviarMailActivity.this,
-                    new String[]{Manifest.permission.GET_ACCOUNTS}, Utils.REQUEST_PERMISSION_GET_ACCOUNTS);
-        }
-    }
-
 
     private void chooseAccountsinPlantilla() {
 
@@ -303,7 +210,8 @@ public class EnviarMailActivity extends AppCompatActivity {
     public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[], @NonNull int[] grantResults) {
         switch (requestCode) {
             case Utils.REQUEST_PERMISSION_GET_ACCOUNTS:
-                chooseAccount(sendFabButton);
+                chooseAccountsinPlantilla();
+                //chooseAccount(sendFabButton);
                 break;
             case SELECT_PHOTO:
                 Intent photoPickerIntent = new Intent(Intent.ACTION_PICK);
@@ -319,11 +227,8 @@ public class EnviarMailActivity extends AppCompatActivity {
         switch (requestCode) {
             case Utils.REQUEST_GOOGLE_PLAY_SERVICES:
                 if (resultCode != RESULT_OK) {
-                    //    showMessage(sendFabButton, "This app requires Google Play Services. Please install " +
-                    //            "Google Play Services on your device and relaunch this app.");
                 } else {
                     getResultsFromApisinTemplate();
-                    //getResultsFromApi(sendFabButton);
                 }
                 break;
             case Utils.REQUEST_ACCOUNT_PICKER:
@@ -336,14 +241,12 @@ public class EnviarMailActivity extends AppCompatActivity {
                         editor.apply();
                         mCredential.setSelectedAccountName(accountName);
                         getResultsFromApisinTemplate();
-                        // getResultsFromApi(sendFabButton);
                     }
                 }
                 break;
             case Utils.REQUEST_AUTHORIZATION:
                 if (resultCode == RESULT_OK) {
                     getResultsFromApisinTemplate();
-                    //getResultsFromApi(sendFabButton);
                 }
                 break;
             case SELECT_PHOTO:
@@ -351,13 +254,9 @@ public class EnviarMailActivity extends AppCompatActivity {
                     final Uri imageUri = data.getData();
                     fileName = getPathFromURI(imageUri);
                     emailfichero = fileName;
-                    // edtAttachmentData.setText(fileName);
                 }
                 break;
             case Utils.REQUEST_INSERT_FILE_REPORT:
-                // It is comming from CopiaMain1Activity with the path name
-                //        For our test the path and file name is:
-                //        path = "data/data/a.bb.bbbb/files/test.txt";
                 String filepath = data.getStringExtra("MESSAGE");
                 // check if file is present
                 File file = new File(filepath);
@@ -368,17 +267,12 @@ public class EnviarMailActivity extends AppCompatActivity {
                     fileName = filepath;
                     Log.i("MIAPP", "fileName es : " + fileName);
                     emailfichero = fileName;
-                    //edtAttachmentData.setText(fileName);
-                    //
 
                 } else { // REPORT FILE IS NOT SENT AND E-MAIL subjet and message body are changed.
                     emailtitulo = "Informe No disponible";
                     emailmensaje = "Contacte con el el administrador";
-                    //edtSubject.setText("Informe No disponible");
-                    //edtMessage.setText("Contacte con el administrador");
                 }
                 getResultsFromApisinTemplate();
-                //getResultsFromApi(sendFabButton);
                 break;
         }
     }
@@ -425,18 +319,13 @@ public class EnviarMailActivity extends AppCompatActivity {
                 cancel(true);
                 return null;
             }
-            //  return null;
         }
 
         private String getDataFromApi() throws IOException {
-            // getting Values for to Address, from Address, Subject and Body
             String user = "me";
-            //String to = Utils.getString(edtToAddress);
             String to = emaildestion;
             String from = mCredential.getSelectedAccountName();
-            //String subject = Utils.getString(edtSubject);
             String subject = emailtitulo;
-            //String body = Utils.getString(edtMessage);
             String body = emailmensaje;
             MimeMessage mimeMessage;
             String response = "";
@@ -484,8 +373,6 @@ public class EnviarMailActivity extends AppCompatActivity {
             Multipart multipart = new MimeMultipart();
 
             // Changed for adding attachment and text
-            // email.setText(bodyText);
-
             BodyPart textBody = new MimeBodyPart();
             textBody.setText(bodyText);
             multipart.addBodyPart(textBody);
@@ -518,7 +405,6 @@ public class EnviarMailActivity extends AppCompatActivity {
 
         @Override
         protected void onPreExecute() {
-            //        mProgress.show();
         }
 
         @Override
@@ -526,20 +412,14 @@ public class EnviarMailActivity extends AppCompatActivity {
             //        mProgress.hide();
             Log.i("MIAPP", "onPostExecute - he terminado de enviar el email");
             finish();
-            if (output == null || output.length() == 0) {
-                //    showMessage(view, "No results returned.");
-            } else {
-                //   showMessage(view, output);
-            }
             mlastErrorString = "ENVIADO CORRECTAMENTE";
-            Intent intent_reciver = new Intent("SERVICIO_TERMINADO");
+            Intent intent_reciver = new Intent("SERVICIO_TERMINADO_FICHAPP");
             intent_reciver.putExtra("CODIGO", mlastErrorString);
             sendBroadcast(intent_reciver);
         }
 
         @Override
         protected void onCancelled() {
-            //        mProgress.hide();
             if (mLastError != null) {
                 if (mLastError instanceof GooglePlayServicesAvailabilityIOException) {
                     showGooglePlayServicesAvailabilityErrorDialog(
@@ -552,19 +432,15 @@ public class EnviarMailActivity extends AppCompatActivity {
                             Utils.REQUEST_AUTHORIZATION);
                     mlastErrorString = "Error en Autorizacion"+mLastError;
                 } else {
-                    //    showMessage(view, "The following error occurred:\n" + mLastError);
                     Log.v("Error", mLastError + "");
                 }
             } else {
                 mlastErrorString = "Error"+mLastError;
-                //  showMessage(view, "Request Cancelled.");
             }
-            Intent intent_reciver = new Intent("SERVICIO_TERMINADO");
+            Intent intent_reciver = new Intent("SERVICIO_TERMINADO_FICHAPP");
             intent_reciver.putExtra("CODIGO", mlastErrorString);
             sendBroadcast(intent_reciver);
             finish();
         }
     }
-
-
 }

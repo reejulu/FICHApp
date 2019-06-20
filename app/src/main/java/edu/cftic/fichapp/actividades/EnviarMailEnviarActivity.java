@@ -20,6 +20,8 @@ import java.io.IOException;
 
 import edu.cftic.fichapp.R;
 
+import static edu.cftic.fichapp.pdf.TemplatePdf.RUTA_INFORME;
+
 public class EnviarMailEnviarActivity extends AppCompatActivity {
     String path;
     String pathsource;
@@ -32,93 +34,61 @@ public class EnviarMailEnviarActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        //
         ActivityCompat.requestPermissions(this, PERMISOS, CODIGO_PETICION_PERMISOS);
 
-        // EL FICHERO CON EL INFORME IRA GUARDADO EN path:
-
-        // creo un fichero llamado INFORME_FICHAJE_.pdf
-        // en storage/emulated/0/ en lugar de donde iria realmente
-        //    storage/emulated/0/PDF/  ( no he podido crear el directorio)
-
-        String content = "hello world";
-        File file2;
-        FileOutputStream outputStream;
-        {
-            try {
-                // file = File.createTempFile("MyCache", null, getCacheDir());
-                file2 = new File(Environment.getExternalStorageDirectory().toString()+File.separator , "INFORME_FICHAJE.pdf");
-
-                outputStream = new FileOutputStream(file2);
-                outputStream.write(content.getBytes());
-                outputStream.close();
-            } catch (
-                    IOException e) {
-                e.printStackTrace();
-            }
-
-            // PASO 1: BORRAR EL FICHERO TEMPORAL EN
-            //            path = "data/data/a.bb.bbbb/files/informe.pdf"
-            //            SI EL FICHERO EXISTE HAY QUE BORRARLO PUES ESO SIGNIFICA QUE ES ANTIGUO
-            path = "data/data/edu.cftic.fichapp/files/informe.pdf";
-            File f = new File(path);
-            f.delete();
+        // PASO 1: BORRAR EL FICHERO TEMPORAL EN
+        //            path = "data/data/a.bb.bbbb/files/informe.pdf"
+        //            SI EL FICHERO EXISTE HAY QUE BORRARLO PUES ESO SIGNIFICA QUE ES ANTIGUO
+        path = "data/data/edu.cftic.fichapp/files/informe.pdf";
+        File f = new File(path);
+        f.delete();
 
 
-            // FICHERO ORIGEN : DONDE ESTA EL INFORME
-            // las pruebas las hice con:
-            //                 src/main/assets/test.txt * esta localizado en directorio assets
-            // storage/emulated/0/PDF/ ( pruebo con storage/emulated/0/)
-            // FICHERO DESTINO : DONDE VAMOS A GUARDAR TEMPORALMENTE EL INFORME
-            // storage/emulated/0/INFORME_FICHAJE_.pdf a --> data/data/a.bb.bbbb/files/informe.pdf
+        // FICHERO ORIGEN : DONDE ESTA EL INFORME
+        // storage/emulated/0/PDF/
+        // FICHERO DESTINO : DONDE VAMOS A GUARDAR TEMPORALMENTE EL INFORME
+        // storage/emulated/0/PDF/INFORME_FICHAJE_.pdf a --> data/data/a.bb.bbbb/files/informe.pdf
 
-            // BUSCAMOS SI EL FICHERO DESTION ORIGEN EXISTE:
-            // 1- SI EXISTE : LO COPIAMOS AL DESTINO
-            // 2- NO EXISTE : ENVIAREMOS EL E-MAIL SIN EL INFORME INDICANDO QUE NO ESTA DISPONIBLE
-            try {
-                Context context = getApplicationContext();
-                //opening text file located in assets directory
-                AssetManager assetManager = getAssets();
-                //InputStream is = assetManager.open("test.txt");
-                File file4 = new File(Environment.getExternalStorageDirectory().getPath()+"/INFORME_FICHAJE.pdf");
-                FileInputStream is = new FileInputStream(file4);
+        // BUSCAMOS SI EL FICHERO DESTION ORIGEN EXISTE:
+        // 1- SI EXISTE : LO COPIAMOS AL DESTINO
+        // 2- NO EXISTE : ENVIAREMOS EL E-MAIL SIN EL INFORME INDICANDO QUE NO ESTA DISPONIBLE
+        try {
+            Context context = getApplicationContext();
+            File file4 = new File(RUTA_INFORME);
+            FileInputStream is = new FileInputStream(file4);
 
+            int size = is.available();
+            byte[] buffer = new byte[size];
+            is.read(buffer);
+            is.close();
 
-                int size = is.available();
-                byte[] buffer = new byte[size];
-                is.read(buffer);
-                is.close();
+            Log.i("MIAPP", "path interno es : " + path);
+            FileOutputStream fos = openFileOutput("informe.pdf", MODE_PRIVATE);
+            fos.write(buffer);
+            fos.close();
+            Log.i("MIAPP", "Se ha creado informe.pdf en data/data... : " + path);
 
-                Log.i("MIAPP", "path interno es : " + path);
-                FileOutputStream fos = openFileOutput("informe.pdf", MODE_PRIVATE);
-                //FileOutputStream fos = new FileOutputStream(f);
-                fos.write(buffer);
-                fos.close();
-                Log.i("MIAPP", "Se ha creado informe.pdf en data/data... : " + path);
-
-            } catch (
-                    Exception e) {
-                Log.i("MIAPP", "No exite el fichero en assest- continuo");
-                //throw new RuntimeException(e);
-            }
-
-            // REQUERIMOS ENVIAR EL E-MAIL: CON O SIN FICHERO ADJUNTADO
-            Intent intent = new Intent();
-            intent.putExtra("MESSAGE", path);
-
-            setResult(2, intent);
-
-            finish();//finishing activity
-            Log.i("MIAPP", "el E-mail ha sido ordenado en SendFileEmail.send ");
-            // AHORA LA EJECUCION DEL PROGRAMA CONTINUARA EN ENVIARMAILACTIVITY
+        } catch (
+                Exception e) {
+            Log.i("MIAPP", "No exite el fichero en assest- continuo");
         }
+
+        // REQUERIMOS ENVIAR EL E-MAIL: CON O SIN FICHERO ADJUNTADO
+        Intent intent = new Intent();
+        intent.putExtra("MESSAGE", path);
+
+        setResult(2, intent);
+
+        finish();//finishing activity
+        Log.i("MIAPP", "el E-mail ha sido ordenado en SendFileEmail.send ");
+        // AHORA LA EJECUCION DEL PROGRAMA CONTINUARA EN ENVIARMAILACTIVITY
 
 
     }
+
     @Override
-    public void onRequestPermissionsResult ( int requestCode, @NonNull String[] permissions,
-                                             @NonNull int[] grantResults){
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
 
         if (requestCode == CODIGO_PETICION_PERMISOS) {
             // en 0 corresponde al primer valor del array PERMISOS -camera y 1 a write_external_storage
@@ -131,8 +101,5 @@ public class EnviarMailEnviarActivity extends AppCompatActivity {
                 this.finish();
             }
         }
-
-        // super.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
-
 }
